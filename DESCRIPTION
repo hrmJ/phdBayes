@@ -1,0 +1,19 @@
+Package: phdBayes
+Title: Shortcuts For The Bayesian Analyses In My PhD
+Version: 0.0.0.9000
+Authors@R: person("Juho", "Härme", email = "juho.harme@gmail.com", role = c("aut", "cre"))
+Description: 
+    The package combines python and R code to create and run jags models
+    of a specific type.
+Depends: R (>= 3.4.4)
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports:
+    rjags,
+    coda,
+    reshape,
+    gdata,
+    ggmcmc,
+    gridExtra
+RoxygenNote: 6.0.1
