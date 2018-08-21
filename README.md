@@ -33,17 +33,35 @@ model = StandardBayesian(yamlpath="/home/juho/phd_data/data/model_specifications
                          dumppath="/tmp/")
 model@datalist = LoadResults(model,lang="fi")
 
-```
-
-#### Saving plot data
-
 
 ```
 
-library(phdBayes)
-model = StandardBayesian(yamlpath="/home/juho/phd_data/data/model_specifications/l8b/",
-                         dumppath="/tmp/")
-model@datalist = LoadResults(model,lang="fi")
+Here's an example script for using on a remote server:
+
+```
+library(stats)                                                                                            
+library(methods)
+library(phdBayes)                                                                                         
+model = StandardBayesian(yamlpath="/tmp/general_new/",                                                    
+                         dumppath="/tmp/")                                                                
+model@datalist = LoadResults(model,lang="fi")                                                             
+saveRDS(model@datalist, "path/to/datalist.rds") 
 
 ```
 
+
+#### Extracting plots to pdfs or svgs
+
+The plots produced by ggmcmc require a huge amount of memory, so it is probably 
+a good idea to just use pdfs or svgs instead of actual ggplot objects.
+
+For this purpose, the function `SavePdf` can be used, e.g.: 
+
+```
+
+general <- ReadData("general_new")
+SavePdf(general,"std.all",2,5)
+SavePdf(general,"std.interact")
+SavePdf(general,"general_new", "funct")
+
+```

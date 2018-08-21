@@ -13,7 +13,6 @@ Imports:
     rjags,
     coda,
     reshape,
-    gdata,
     ggmcmc,
     gridExtra
 RoxygenNote: 6.0.1

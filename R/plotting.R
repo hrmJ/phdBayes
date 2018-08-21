@@ -7,8 +7,6 @@
 #' @param MeanTreshold minkä alle jäävät arvot väritetään vaaleammalla värillä
 #' @param lang tulostetaanko suomen- vai englanninkielisiä kuvioita
 #' 
-#' @import gdata
-#' 
 #' @export
 
 GetLabelNamesForGgMcmc <- function(VarName, VarValues, MeanGuide, MeanTreshold=0.1, lang="fi"){
@@ -48,12 +46,6 @@ GetLabelNamesForGgMcmc <- function(VarName, VarValues, MeanGuide, MeanTreshold=0
         idx <- idx +1
     }
     labels <- do.call("paste", c(tobepastednames, sep = ","))
-    if(lang == "fi"){
-        labels <- gsub("(.*),(S1|S2/S3|S4)","",labels)
-    }
-    else{
-        #labels <- gsub("(.*),(L1|L2/L3|L4)","",labels)
-    }
     Parameter=paste(VarName, "[", rawlabels, "]", sep="")
     return (data.frame(Parameter=Parameter, Label=labels))
 
