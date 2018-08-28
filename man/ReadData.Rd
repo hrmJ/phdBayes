@@ -10,5 +10,5 @@ ReadData(name)
 \item{name}{mallin nimi}
 }
 \description{
-..tallentaa samalla erikseen Kurschke-tyylisiin kuvioihin tarvittavan matriisimuotoisen posteriorirdatan
+Lukee tilastollista mallia koskevan datan rds-tiedostosta
 }

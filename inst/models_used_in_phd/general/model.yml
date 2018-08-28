@@ -1,0 +1,26 @@
+'y':
+  name: location3
+  'n': 3.0
+upper_x:
+  name: lang
+  'n': 2.0
+x:
+- name: funct
+  'n': 12
+- name: morph
+  'n': 4
+- name: pos
+  'n': 2
+- name: isnumeric
+  'n': 2
+datafile: modeldata/general_new9.rds
+outputfile: modeldata/general_new9_post.rds
+jags_settings:
+- adapt: 30000.0
+- n.chains: 2.0
+- burnin: 10000.0
+- thin: 1.0
+- sample: 20000.0
+- method: parallel
+diagnostics_directory: mcmc_diagnostics/general_new9
+

@@ -163,7 +163,7 @@ class Model():
     def CreateScript(self):
         xvarlist = [self.upper_x] + self.x
         output = "#!/usr/bin/env Rscript\n\n"
-        output += "library(runjags)\nlibrary(coda)\nlibrary(mcmcplots)\n\n"
+        output += "library(methods)\nlibrary(runjags)\nlibrary(coda)\nlibrary(mcmcplots)\n\n"
         output += "aineisto <- readRDS('{}')\n\n".format(self.datafile)
 
         output += "for(varname in c({}))".format(",".join(["'" + x.name + "'" for x in xvarlist]))

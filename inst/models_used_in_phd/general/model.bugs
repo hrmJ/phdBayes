@@ -1,0 +1,114 @@
+model{ 
+#LIKELIHOOD
+for (lang.idx in 1:Nlang){ for (funct.idx in 1:Nfunct){ for (morph.idx in 1:Nmorph){ for (pos.idx in 1:Npos){ for (isnumeric.idx in 1:Nisnumeric){ 
+    observations[lang.idx, funct.idx, morph.idx, pos.idx, isnumeric.idx, 1:Nlocation3] ~ dmulti(probs[lang.idx, funct.idx, morph.idx, pos.idx, isnumeric.idx, 1:Nlocation3], totals[lang.idx, funct.idx, morph.idx, pos.idx, isnumeric.idx])
+    for (location3.idx in 1:Nlocation3){ 
+        probs[lang.idx, funct.idx, morph.idx, pos.idx, isnumeric.idx, location3.idx] <- phi[lang.idx, funct.idx, morph.idx, pos.idx, isnumeric.idx, location3.idx] / sum(phi[lang.idx, funct.idx, morph.idx, pos.idx, isnumeric.idx, 1:Nlocation3])
+        log(phi[lang.idx, funct.idx, morph.idx, pos.idx, isnumeric.idx, location3.idx]) <- location3[location3.idx] + lang[lang.idx, location3.idx] + funct[funct.idx, location3.idx] + lang.funct[lang.idx, funct.idx, location3.idx] + morph[morph.idx, location3.idx] + lang.morph[lang.idx, morph.idx, location3.idx] + pos[pos.idx, location3.idx] + lang.pos[lang.idx, pos.idx, location3.idx] + isnumeric[isnumeric.idx, location3.idx] + lang.isnumeric[lang.idx, isnumeric.idx, location3.idx] 
+}
+}}}}}
+#PRIORS
+sigma.location3 ~ dt(0,1,1) T(0,)
+tau.location3 <- pow(sigma.location3,-2)
+ 
+sigma.lang ~ dt(0,1,1) T(0,)
+tau.lang <- pow(sigma.lang,-2)
+ 
+sigma.funct ~ dt(0,1,1) T(0,)
+tau.funct <- pow(sigma.funct,-2)
+ 
+sigma.lang.funct ~ dt(0,1,1) T(0,)
+tau.lang.funct <- pow(sigma.lang.funct,-2)
+ 
+sigma.morph ~ dt(0,1,1) T(0,)
+tau.morph <- pow(sigma.morph,-2)
+ 
+sigma.lang.morph ~ dt(0,1,1) T(0,)
+tau.lang.morph <- pow(sigma.lang.morph,-2)
+ 
+sigma.pos ~ dt(0,1,1) T(0,)
+tau.pos <- pow(sigma.pos,-2)
+ 
+sigma.lang.pos ~ dt(0,1,1) T(0,)
+tau.lang.pos <- pow(sigma.lang.pos,-2)
+ 
+sigma.isnumeric ~ dt(0,1,1) T(0,)
+tau.isnumeric <- pow(sigma.isnumeric,-2)
+ 
+sigma.lang.isnumeric ~ dt(0,1,1) T(0,)
+tau.lang.isnumeric <- pow(sigma.lang.isnumeric,-2)
+ 
+for (location3.idx in 1:Nlocation3){ 
+    location3[location3.idx] ~ dnorm(0, tau.location3)
+}
+ 
+for (location3.idx in 1:Nlocation3){ 
+    lang.raw[location3.idx] ~ dnorm(0, tau.lang)
+    lang[1, location3.idx] <- lang.raw[location3.idx] - mean(lang.raw[1:Nlocation3])
+    lang[2, location3.idx] <- -lang[1, location3.idx]
+ 
+    for (funct.idx in 1:Nfunct){ 
+        funct.raw[funct.idx, location3.idx] ~ dnorm(0, tau.funct)
+        funct[funct.idx, location3.idx] <- 
+            funct.raw[funct.idx, location3.idx] 
+            - mean(funct.raw[1:Nfunct, location3.idx]) 
+            - mean(funct.raw[funct.idx, 1:Nlocation3]) 
+            + mean(funct.raw[1:Nfunct, 1:Nlocation3]) 
+        #INTERACTION
+        lang.funct.raw[funct.idx, location3.idx] ~ dnorm(0, tau.lang.funct)
+        lang.funct[1, funct.idx, location3.idx] <- 
+            lang.funct.raw[funct.idx, location3.idx] 
+            - mean(lang.funct.raw[1:Nfunct, location3.idx]) 
+            - mean(lang.funct.raw[funct.idx, 1:Nlocation3]) 
+            + mean(lang.funct.raw[1:Nfunct, 1:Nlocation3]) 
+        lang.funct[2,funct.idx,location3.idx] <- -lang.funct[1,funct.idx,location3.idx]
+}
+    for (morph.idx in 1:Nmorph){ 
+        morph.raw[morph.idx, location3.idx] ~ dnorm(0, tau.morph)
+        morph[morph.idx, location3.idx] <- 
+            morph.raw[morph.idx, location3.idx] 
+            - mean(morph.raw[1:Nmorph, location3.idx]) 
+            - mean(morph.raw[morph.idx, 1:Nlocation3]) 
+            + mean(morph.raw[1:Nmorph, 1:Nlocation3]) 
+        #INTERACTION
+        lang.morph.raw[morph.idx, location3.idx] ~ dnorm(0, tau.lang.morph)
+        lang.morph[1, morph.idx, location3.idx] <- 
+            lang.morph.raw[morph.idx, location3.idx] 
+            - mean(lang.morph.raw[1:Nmorph, location3.idx]) 
+            - mean(lang.morph.raw[morph.idx, 1:Nlocation3]) 
+            + mean(lang.morph.raw[1:Nmorph, 1:Nlocation3]) 
+        lang.morph[2,morph.idx,location3.idx] <- -lang.morph[1,morph.idx,location3.idx]
+}
+    #A BINARY PREDICTOR:
+    pos.raw[location3.idx] ~ dnorm(0, tau.pos)
+    pos[1, location3.idx] <- pos.raw[location3.idx] - mean(pos.raw[1:Nlocation3])
+    pos[2, location3.idx] <- -pos[1, location3.idx]
+ 
+    lang.pos.raw[location3.idx] ~ dnorm(0, 0.001)
+    lang.pos[1, 1, location3.idx] <- lang.pos.raw[location3.idx] - mean(lang.pos.raw[1:Nlocation3]) 
+    lang.pos[1, 2, location3.idx] <- -lang.pos[1,1,location3.idx]
+    lang.pos[2, 1, location3.idx] <- -lang.pos[1,1,location3.idx]
+    lang.pos[2, 2, location3.idx] <- lang.pos[1,1,location3.idx]
+    #A BINARY PREDICTOR:
+    isnumeric.raw[location3.idx] ~ dnorm(0, tau.isnumeric)
+    isnumeric[1, location3.idx] <- isnumeric.raw[location3.idx] - mean(isnumeric.raw[1:Nlocation3])
+    isnumeric[2, location3.idx] <- -isnumeric[1, location3.idx]
+ 
+    lang.isnumeric.raw[location3.idx] ~ dnorm(0, 0.001)
+    lang.isnumeric[1, 1, location3.idx] <- lang.isnumeric.raw[location3.idx] - mean(lang.isnumeric.raw[1:Nlocation3]) 
+    lang.isnumeric[1, 2, location3.idx] <- -lang.isnumeric[1,1,location3.idx]
+    lang.isnumeric[2, 1, location3.idx] <- -lang.isnumeric[1,1,location3.idx]
+    lang.isnumeric[2, 2, location3.idx] <- lang.isnumeric[1,1,location3.idx]
+}
+ 
+#STANDARD DEVIATIONS
+std.lang <- sd(lang[,])
+std.funct <- sd(funct[,])
+std.morph <- sd(morph[,])
+std.pos <- sd(pos[,])
+std.isnumeric <- sd(isnumeric[,])
+std.lang.funct <- sd(lang.funct[,,])
+std.lang.morph <- sd(lang.morph[,,])
+std.lang.pos <- sd(lang.pos[,,])
+std.lang.isnumeric <- sd(lang.isnumeric[,,])
+}

@@ -4,7 +4,7 @@
 \alias{CreatePdfFile}
 \title{Luo pdf-tiedoston kuvasta}
 \usage{
-CreatePdfFile(obj, fname, thiswidth, thisheight)
+CreatePdfFile(obj, fname, thiswidth, thisheight, coord_start, coord_end)
 }
 \arguments{
 \item{obj}{ggplot-kuvio}
@@ -14,6 +14,10 @@ CreatePdfFile(obj, fname, thiswidth, thisheight)
 \item{thiswidth}{kuvan leveys}
 
 \item{thisheight}{kuvan korkeus}
+
+\item{coord_start}{x-akselin alkupää}
+
+\item{coord_end}{x-akselin loppupää}
 }
 \description{
 Luo pdf-tiedoston kuvasta

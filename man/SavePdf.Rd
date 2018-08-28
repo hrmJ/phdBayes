@@ -4,7 +4,8 @@
 \alias{SavePdf}
 \title{Tallentaa pdf-tiedostot yhden til. mallin kuvioista.}
 \usage{
-SavePdf(datalist, modelname, plotname, thiswidth = F, thisheight = F)
+SavePdf(datalist, modelname, plotname, thiswidth = F, thisheight = F,
+  coord_start = -2, coord_end = 2)
 }
 \arguments{
 \item{datalist}{StandardBayesian-olion datalista}
