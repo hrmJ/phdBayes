@@ -31,9 +31,15 @@ CreatePdfFile <- function(obj, fname, thiswidth, thisheight, coord_start, coord_
         else{
             pdf(fname)
         }
-        show(obj + coord_cartesian(xlim = c(coord_start, coord_end)) + 
+        show(
+             obj + coord_cartesian(xlim = c(coord_start, coord_end)) + 
              xlab("Vaikutuksen voimakkuus logaritmisella asteikolla") +
-             ylab("")) 
+             ylab("") + 
+             theme(
+                   axis.title=element_text(size=7)
+                   #axis.text=element_text(size=6)
+                   ) 
+         ) 
         dev.off()
 }
 

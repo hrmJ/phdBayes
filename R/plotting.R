@@ -93,7 +93,7 @@ GetAllPlots <- function(varname.in.model, varname.in.df,  vaihe1.df, post, sumst
         cat(varname.in.df, " -- interaktioilla kielen kanssa -- ", locnames[s],"\n")
         #regexpin alussa oleva 1 tarkoittaa, että vertaillaan suhteessa kielimuuttujan arvoon 1 ("fi")
         regex <- paste("^",gsub("\\.","\\\\.",intvarname),"\\[1,\\d+,",s,sep="")
-        iaplots[[locnames[s]]] <- StyleGgmcmcComp(ggs_caterpillar(ggs(post, family=regex, par_labels=ia.ints), horizontal=T)  )
+        iaplots[[locnames[s]]] <- StyleGgmcmcComp(ggs_caterpillar(ggs(post, family=regex, par_labels=ia.ints, thin_ci = c(0.05, 0.95), thick_ci = c(0.25, 0.75)), horizontal=T)  )
     }
 
     return(list("general"=genplots,"interaction"=iaplots))
