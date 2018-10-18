@@ -76,7 +76,7 @@ GetAllPlots <- function(varname.in.model, varname.in.df,  vaihe1.df, post, sumst
     for(s in c(1:3)){
         cat(varname.in.df, " -- Ilman interaktioita -- ", locnames[s],"\n")
         regex <- paste("^",gsub("\\.","\\\\.",varname.in.model),"\\[\\d+,",s,sep="")
-        genplots[[locnames[s]]] <- StyleGgmcmcComp(ggs_caterpillar(ggs(post, family=regex, par_labels=gen.ints), horizontal=T)  )
+        genplots[[locnames[s]]] <- StyleGgmcmcComp(ggs_caterpillar(ggs(post, family=regex, par_labels=gen.ints), thin_ci = c(0.05, 0.95), thick_ci = c(0.25, 0.75), horizontal=T)  )
     }
     #2. interaktiot
     intvarname <- ifelse(grepl("b\\.",varname.in.model),paste("b.lang.",varname.in.df,sep=""),paste("lang.",varname.in.df,sep=""))
