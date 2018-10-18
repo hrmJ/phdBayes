@@ -46,6 +46,7 @@ GetLabelNamesForGgMcmc <- function(VarName, VarValues, MeanGuide, MeanTreshold=0
         idx <- idx +1
     }
     labels <- do.call("paste", c(tobepastednames, sep = ","))
+    labels <- gsub("std.","",labels)
     Parameter=paste(VarName, "[", rawlabels, "]", sep="")
     return (data.frame(Parameter=Parameter, Label=labels))
 

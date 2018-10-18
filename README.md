@@ -29,8 +29,7 @@ PrintSvg(model)
 ```
 
 library(phdBayes)
-model = StandardBayesian(yamlpath="/home/juho/phd_data/data/model_specifications/l8b/",
-                         dumppath="/tmp/")
+model = StandardBayesian(yamlpath="/root/", dumppath="/root/")
 model@datalist = LoadResults(model,lang="fi")
 
 
@@ -42,8 +41,7 @@ Here's an example script for using on a remote server:
 library(stats)                                                                                            
 library(methods)
 library(phdBayes)                                                                                         
-model = StandardBayesian(yamlpath="/tmp/general_new/",                                                    
-                         dumppath="/tmp/")                                                                
+model = StandardBayesian(yamlpath="./",dumppath="./")                                                                
 model@datalist = LoadResults(model,lang="fi")                                                             
 saveRDS(model@datalist, "path/to/datalist.rds") 
 
