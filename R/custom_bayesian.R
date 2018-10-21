@@ -221,6 +221,7 @@ setMethod("LoadResults","StandardBayesian",
             }
             mylabs_gen <- mylabs_gen  %>% filter(Parameter != "")
             mylabs_int <- mylabs_int  %>% filter(Parameter != "")
+            cat("STD-kuviot")
             datalist$plots$std.all <- ggs_caterpillar(ggs(datalist$post, family="^std.[^\\.]+$", par_labels=mylabs_gen), thin_ci = c(0.05, 0.95), thick_ci = c(0.25, 0.75)) + theme_bw() +  geom_vline(xintercept = 0, linetype="dotted")
             datalist$plots$std.interact <- ggs_caterpillar(ggs(datalist$post, family="^std\\.lang\\.", par_labels=mylabs_int), thin_ci = c(0.05, 0.95), thick_ci = c(0.25, 0.75)) + theme_bw() +  geom_vline(xintercept = 0, linetype="dotted")
             #Hae jokaisesta prediktorista kuviot
