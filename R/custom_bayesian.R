@@ -212,8 +212,15 @@ setMethod("LoadResults","StandardBayesian",
             datalist$sumstats <- summary(datalist$post)$statistics
             cat("Luodaan keskihajontakuviota","\n")
             datalist$plots <- list()
-            datalist$plots$std.all <- ggs_caterpillar(ggs(datalist$post, family="^std.[^\\.]+$")) + theme_bw() +  geom_vline(xintercept = 0, linetype="dotted")
-            datalist$plots$std.interact <- ggs_caterpillar(ggs(datalist$post, family="^std\\.lang\\.")) + theme_bw() +  geom_vline(xintercept = 0, linetype="dotted")
+            library(dplyr)
+            mylabs_gen <- data.frame(Parameter=c(),Label=c())
+            mylabs_int <- data.frame(Parameter=c(),Label=c())
+            for (predictor in object@predictorlist){
+                mylabs_gen <- mylabs_gen  %>% add_row(Parameter=paste0("std.",predictor$name), Label=predictor$name)
+                mylabs_int <- mylabs_int  %>% add_row(Parameter=paste0("std.lang.",predictor$name), Label=predictor$name)
+            }
+            datalist$plots$std.all <- ggs_caterpillar(ggs(datalist$post, family="^std.[^\\.]+$", par_labels=mylabs_gen)) + theme_bw() +  geom_vline(xintercept = 0, linetype="dotted")
+            datalist$plots$std.interact <- ggs_caterpillar(ggs(datalist$post, family="^std\\.lang\\.", par_labels=mylabs_int)) + theme_bw() +  geom_vline(xintercept = 0, linetype="dotted")
             #Hae jokaisesta prediktorista kuviot
             cat("Aletaan luoda prediktorikohtaisia kuvioita")
             for (predictor in object@predictorlist){

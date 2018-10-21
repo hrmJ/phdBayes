@@ -5,7 +5,7 @@
 \title{Tallentaa pdf-tiedostot yhden til. mallin kuvioista.}
 \usage{
 SavePdf(datalist, modelname, plotname, thiswidth = F, thisheight = F,
-  coord_start = -2, coord_end = 2)
+  coords = c(-2, 2, -2, 2))
 }
 \arguments{
 \item{datalist}{StandardBayesian-olion datalista}
@@ -17,6 +17,8 @@ SavePdf(datalist, modelname, plotname, thiswidth = F, thisheight = F,
 \item{thiswidth}{kuvan leveys}
 
 \item{thisheight}{kuvan korkeus}
+
+\item{coords}{x-akselin raja-arvot muodossa c(general.start,general.end,int.start,int.end)}
 }
 \description{
 Tallentaa pdf-tiedostot yhden til. mallin kuvioista.
