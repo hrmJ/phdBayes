@@ -213,12 +213,14 @@ setMethod("LoadResults","StandardBayesian",
             cat("Luodaan keskihajontakuviota","\n")
             datalist$plots <- list()
             library(dplyr)
-            mylabs_gen <- data.frame(Parameter=c(),Label=c())
-            mylabs_int <- data.frame(Parameter=c(),Label=c())
+            mylabs_gen <- tibble(Parameter=c(),Label=c())
+            mylabs_int <- tibble(Parameter=c(),Label=c())
             for (predictor in object@predictorlist){
                 mylabs_gen <- mylabs_gen  %>% add_row(Parameter=paste0("std.",predictor$name), Label=predictor$name)
                 mylabs_int <- mylabs_int  %>% add_row(Parameter=paste0("std.lang.",predictor$name), Label=predictor$name)
             }
+            mylabs_gen <- mylabs_gen  %>% filter(Parameter != "")
+            mylabs_int <- mylabs_int  %>% filter(Parameter != "")
             datalist$plots$std.all <- ggs_caterpillar(ggs(datalist$post, family="^std.[^\\.]+$", par_labels=mylabs_gen)) + theme_bw() +  geom_vline(xintercept = 0, linetype="dotted")
             datalist$plots$std.interact <- ggs_caterpillar(ggs(datalist$post, family="^std\\.lang\\.", par_labels=mylabs_int)) + theme_bw() +  geom_vline(xintercept = 0, linetype="dotted")
             #Hae jokaisesta prediktorista kuviot
