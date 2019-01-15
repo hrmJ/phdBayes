@@ -217,8 +217,9 @@ setMethod("LoadResults","StandardBayesian",
             mylabs_int <- tibble(Parameter=c(""),Label=c(""))
             for (predictor in object@predictorlist){
                 mylabs_gen <- mylabs_gen  %>% add_row(Parameter=paste0("std.",predictor$name), Label=predictor$name)
-                mylabs_int <- mylabs_int  %>% add_row(Parameter=paste0("std.lang.",predictor$name), Label=predictor$name)
+                mylabs_int <- mylabs_int  %>% add_row(Parameter=paste0("std.lang.",predictor), Label=paste0("lang.",predictor$name))
             }
+            mylabs_gen <- mylabs_gen  %>% add_row(Parameter=paste0("std.lang"), Label="lang")
             mylabs_gen <- mylabs_gen  %>% filter(Parameter != "")
             mylabs_int <- mylabs_int  %>% filter(Parameter != "")
             cat("STD-kuviot")
@@ -292,3 +293,42 @@ setMethod("PrintSvg","StandardBayesian",
             write(htmlstring,paste0(location,object@filename,"/index.html"))
           }
           )
+
+
+#' a quick shortcut for (re)creating ggmcmc plots
+#' 
+#' @export
+
+GetGraph <- function(post, predictorlist, getstd=F, getpred=F) {
+    datalist <- list(post=post)
+    cat("Luodaan keskihajontakuviota","\n")
+    datalist$plots <- list()
+    library(dplyr)
+    mylabs_gen <- tibble(Parameter=c(""),Label=c(""))
+    mylabs_int <- tibble(Parameter=c(""),Label=c(""))
+    for (predictor in predictorlist){
+        mylabs_gen <- mylabs_gen  %>% add_row(Parameter=paste0("std.",predictor), Label=predictor)
+        mylabs_int <- mylabs_int  %>% add_row(Parameter=paste0("std.lang.",predictor), Label=paste0("lang.",predictor))
+    }
+    mylabs_gen <- mylabs_gen  %>% add_row(Parameter=paste0("std.lang"), Label="lang")
+    mylabs_gen <- mylabs_gen  %>% 
+        filter(Parameter != "") %>% 
+        mutate(Label=gsub("morph","morph/ref",Label))
+    mylabs_int <- mylabs_int  %>% 
+        filter(Parameter != "") %>% 
+        mutate(Label=gsub("morph","morph/ref",Label))
+
+    if(getstd == T){
+        cat("STD-kuviot\n")
+        datalist$plots$std.all <- ggs_caterpillar(ggs(datalist$post, family="^std.[^\\.]+$", par_labels=mylabs_gen), thin_ci = c(0.05, 0.95), thick_ci = c(0.25, 0.75)) + theme_bw() +  geom_vline(xintercept = 0, linetype="dotted")
+        datalist$plots$std.interact <- ggs_caterpillar(ggs(datalist$post, family="^std\\.lang\\.", par_labels=mylabs_int), thin_ci = c(0.05, 0.95), thick_ci = c(0.25, 0.75)) + theme_bw() +  geom_vline(xintercept = 0, linetype="dotted")
+    }
+    if(getpred == T){
+        #Hae jokaisesta prediktorista kuviot
+        cat("Aletaan luoda prediktorikohtaisia kuvioita\n")
+        for (predictor in predictorlist){
+            datalist$plots[[predictor$name]] <- GetAllPlots(predictor, predictor, object@original.data, post, sumstats, "fi")
+        }
+    }
+    return (datalist$plots)
+}

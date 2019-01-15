@@ -51,12 +51,19 @@ CreatePdfFile <- function(obj, fname, thiswidth, thisheight, coord_start, coord_
 #' @param thiswidth kuvan leveys
 #' @param thisheight kuvan korkeus
 #' @param coords x-akselin raja-arvot muodossa c(general.start,general.end,int.start,int.end)
+#' @param justplots just use the plots object instead of the whole datalist
 #' 
 #' @export
 
-SavePdf <- function(datalist, modelname, plotname, thiswidth=F, thisheight=F, coords=c(-2,2,-2,2)){
+SavePdf <- function(datalist, modelname, plotname, thiswidth=F, thisheight=F, coords=c(-2,2,-2,2), justplots=F){
+    if(justplots == T){
+        plots <- datalist
+    }
+    else{
+        plots <- datalist$plots
+    }
     if(grepl("std",plotname)){
-        pl <- datalist$plots[[plotname]]
+        pl <- plots[[plotname]]
         fname <- paste0(getOption("phdpath"),"figure/modelplots/",modelname,"/std/",plotname,".pdf")
         CreatePdfFile(pl, fname, thiswidth, thisheight, coords[1], coords[2])
     }
@@ -64,7 +71,7 @@ SavePdf <- function(datalist, modelname, plotname, thiswidth=F, thisheight=F, co
         i = 1
         for(type in c("general","interaction")){
             for(loc in c("S1","S2_S3","S4")){
-                pl <- datalist$plots[[plotname]][[type]][[loc]]
+                pl <- plots[[plotname]][[type]][[loc]]
                 fname <- paste0(getOption("phdpath"),
                                 "figure/modelplots/",
                                 modelname,"/",
